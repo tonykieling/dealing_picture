@@ -1,0 +1,24 @@
+# psql  
+# CREATE ROLE pictures WITH LOGIN PASSWORD 'pictures';  
+# ALTER ROLE pictures CREATEDB; // it allows the role usersys creates a db  
+# <logout>  
+# psql -d postgres -U pictures
+# CREATE DATABASE pictures;  
+# \c pictures  
+
+
+\c | Connect to a new database
+\dt | List all tables
+\du | List all roles
+\list | List databases
+
+
+# CREATE TABLE users (  
+  ID SERIAL PRIMARY KEY,  
+  name VARCHAR(60),  
+  picture_name VARCHAR(60)  
+);  
+
+# INSERT INTO users (name, picture_name)  
+VALUES ('bob', ''), ('sue','');  
+

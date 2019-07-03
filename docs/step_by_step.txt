@@ -1,0 +1,8 @@
+1. set DB stuff (stepsDB.txt)  
+2. prepare a place to store files  
+3. create react app  
+4. insert <input file> to select the file  
+5. insert a button to send the file to the server  
+6. install axios  
+7. set axios POST method
+8. 
