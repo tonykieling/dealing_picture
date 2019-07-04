@@ -22,13 +22,14 @@ export default class App extends Component {
     }
     
   sendPicture = event => {
+    // event.preventDefault();
     const data = new FormData() ;
     data.append('file', this.state.pictureFile);
 
-    axios.post("http://localhost:8000/upload", data, { /*receive two parameter endpoint url ,form data*/ })
-      .then(res => { // then print response status
-        console.log(res.statusText)
-      });
+    axios.post("http://localhost:8888/upload", data, { /*receive two parameter endpoint url ,form data*/ })
+      // .then(res => { // then print response status
+      //   console.log(res.statusText);});
+      .then(console.log)
   }
 
   render() {
