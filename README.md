@@ -14,6 +14,8 @@ Dependencies:
 6. Multer  
 7. Axios  
 8. Concurrently (it runs back and front end servers at the same time - concurrently)  
+  
 
-# npm run dev  
+# run:  
+npm run dev  
 

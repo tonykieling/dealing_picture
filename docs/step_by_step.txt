@@ -7,5 +7,5 @@
 7. set axios POST method
 
 BACKEND
-8. install express, multer, and cors
-9. 
+8. install express, multer, cors and pg  
+9. set: express, multer, pg and cors  
