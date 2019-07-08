@@ -3,6 +3,8 @@ Project to practice dealing picture stuff.
 References:  
 https://www.youtube.com/watch?v=srPXMt1Q0nY  
 https://programmingwithmosh.com/javascript/react-file-upload-proper-server-side-nodejs-easy/  
+https://www.bignerdranch.com/blog/dont-over-react/  
+https://stackoverflow.com/questions/42395034/how-to-display-binary-data-as-image-in-react  
   
   
 Dependencies:  

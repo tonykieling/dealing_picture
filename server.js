@@ -17,19 +17,19 @@ app.use(cors());
 
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'files/pictures');
+    cb(null, 'src/pictures');
   },
   filename: function (req, file, cb) {
-    console.log("file info:", file);
-    cb(null, file.originalname);
+    cb(null, "bob.jpg");
   }
 });
 
-let upload = multer({ storage: storage }).single('file');
+let upload = multer({ storage: storage}).single('file');
 
-app.post("/upload", (req, res) => {
-  console.log("inside /upload");
+app.post("/picture", (req, res) => {
+  console.log("inside /picture");
   upload(req, res, err => {
+    console.log("req.file", req.file);
     if (err instanceof multer.MulterError)
       return res.status(500).json(err)
     else if (err)
@@ -40,6 +40,7 @@ app.post("/upload", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
+  console.log("inside post'/users'");
   pool.query("SELECT * from users", [], (error, result) => {
     if (error) {
       res.send(error.message);

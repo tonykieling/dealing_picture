@@ -2,113 +2,122 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 
-const picturePath = "/files/pictures";
 export default class App extends Component {
   state = {
     pictureFile: null,
     pictureName: null,
-    pictureOK: true,
-    users: ""
+    user: null,
+    loadUser: false,
+    newPicture: null,
+    buttonLabel: "Change Image?"
   };
 
-  mountUser = user => {
-    // console.log("user", user);
-    return(
-      <div>
-        {/* <label>User: {user.name}</label> */}
-        <label>User: Test</label>
-        <input type="file" name="file" onChange={this.handler}/>
-        <button type="button" className="btn btn-success btn-block" onClick={this.sendPicture}>Upload</button>
-      </div>
-    )
-  }
-
   handler = event => {
+    console.log("inside handler - 2");
+    console.log(event.target.name);
     event.preventDefault();
     const file = event.target.files[0];
     console.log("fileinfo:", file);
-    if (file.size > (1024 * 1024 * 1)) {
+    if (file.size > (1024 * 1024 * 10)) {
       alert("big file!");
       event.target.value = null;
     } else
-      this.setState({ pictureFile: file });
+      this.setState({ newPicture: file });
+  }
+
+  mountUser = user => {
+    console.log("inside mountUser - 1");
+    axios.post("http://localhost:8888/users")
+    //   console.log(res.statusText);});
+    .then(result => {
+      const user = result.data[0];
+      this.setState({ 
+        pictureName: user.picture_name,
+        user: user.name,
+        loadUser: false }) 
+      });
   }
 
   sendPicture = event => {
-    // event.preventDefault();
+    event.preventDefault();
+    // console.log("inside sendPicture - 3");
+    // console.log("pictureFile", this.state.pictureFile);
     const data = new FormData() ;
-    data.append('file', this.state.pictureFile);
-    console.log("data", data);
-
-    axios.post("http://localhost:8888/upload", data, { /*receive two parameter endpoint url ,form data*/ })
-      // .then(res => { // then print response status
+    data.append('file', this.state.pictureFile || this.state.newPicture);
+// console.log("data", data);
+    axios.post("http://localhost:8888/picture", data)
       //   console.log(res.statusText);});
       .then(result => {
-        console.log("message from server:", result);
-        this.setState({ 
-          pictureName: picturePath + "/bob.jpg",
-          pictureOK: true });
+        console.log("result", result);
+        // this.setState({ 
+        //   pictureName: "bob.jpg",
+        //   user: "bob" });
+        // this.clickBob.click();
       });
   }
 
   renderPicture = () => {
-    console.log("inside renderPicture");
+    console.log("inside renderPicture - 4");
     console.log("pictureName:", this.state.pictureName);
     return (
       <div style={{border: "solid blue 1px", margin: "20px", padding: "10px"}}>
-        <img src={this.state.pictureName} alt="supposed to be smth"/>
-        <img src={require("./pictures/bob.jpg")} alt="supposed to be smth222" width="250px"/>
+
+        <div style={{border: "solid red 1px", width: "250px", paddingRight: "10px", display: "inline-block"}}>
+          <img src={require("./pictures/" + this.state.pictureName)} alt="supposed to be smth222" width="250px" height="250px"/>
+          <div>
+            <input 
+              type="file"
+              style={{display: "none"}}
+              onChange={this.handler}
+              ref={fileInput => this.fileInput = fileInput} />
+            <button onClick={() => this.fileInput.click()}> {this.state.buttonLabel} </button>
+          </div>
+        </div>
+
+        {this.state.newPicture ?
+          <div style={{border: "solid blue 1px", paddingRight: "10px", width: "250px", display: "inline-block"}}>
+            <img src={URL.createObjectURL(this.state.newPicture)} alt="new one" width="250px"/>
+            <div>
+              <label>Replace Img?</label>
+              <button onClick={this.sendPicture}> Yes</button>
+              <button onClick={this.noNewImg}> No</button>
+            </div>
+          </div> :
+          null }
       </div>
     );
   }
 
-  loadUsers = async () => {
-    console.log("inside loadUsers");
-    await fetch("http://localhost:8888/users", {  
-      method: "POST",
-    })
-    .then(res => res.json())
-    .then(resJSON => this.setState({ users: resJSON}));
-    console.log("this.state.users", this.state.users);
+  noNewImg = event => {
+    event.preventDefault();
+    this.setState({ 
+      newPicture: null,
+      buttonLabel: "Change Image?" });
+  }
 
-    const localUsers = this.state.users.map(user => this.mountUser(user));
-
-    this.setState({
-      users: localUsers
-    });
+  first = event => {
+    event.preventDefault();
+    this.setState({ loadUser: true });
   }
 
   render() {
-    // console.log("asd", Object.keys(this.state.users).length);
-    // console.log("this.state.users", this.state.users);
+    console.log("inside RENDER");
+    console.log("this.state", this.state);
     return (
       <div>
-        <div style={{border: "solid blue 1px", margin: "20px", padding: "10px"}}>
-          <label>Add picture</label>
-          {this.mountUser()}
-        </div>
+        <button onClick={this.first} ref={clickBob => this.clickBob = clickBob}> Bob </button>
+        <button onClick={() => this.clickBob.click()} ref={asd => this.asd = asd}> Bob II </button>
+        <button onClick={() => this.asd.click()}> Bob III </button>
 
-        { this.state.pictureOK ?
-            this.renderPicture():
-            null}
+        { this.state.loadUser ? 
+            this.mountUser() :
+            null
+        }
 
-        {/* <div>
-          <button className="btn btn-success" onClick={this.loadUsers}> Get users </button>
-          {Object.keys(this.state.users).length ? 
-            <table>
-            <thead>
-              <tr>
-                <th>id</th>
-                <th>Name</th>
-                <th>picture_name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.users}
-            </tbody>
-          </table> :
-            "empty" }
-        </div> */}
+        { this.state.user ?
+          this.renderPicture() :
+          null }
+
       </div>
     )
   }
